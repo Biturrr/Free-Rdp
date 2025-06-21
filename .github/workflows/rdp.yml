@@ -1,12 +1,12 @@
-name: Free Rdp
+name: Buat Sesi RDP Sementara
 
 on:
-  workflow_dispatch: # Memungkinkan Anda menjalankan workflow ini secara manual
+  workflow_dispatch:
 
 jobs:
   rdp_session:
     runs-on: ubuntu-latest
-    timeout-minutes: 350 # Maksimal 360 menit (6 jam), sesi akan otomatis mati setelah ini
+    timeout-minutes: 350
 
     steps:
       - name: 1. Instalasi Lingkungan Desktop dan Server RDP
@@ -17,29 +17,23 @@ jobs:
 
       - name: 2. Konfigurasi Server RDP
         run: |
-          # Set XFCE4 sebagai sesi default untuk RDP
           echo xfce4-session > ~/.xsession
-          # Atasi masalah layar hitam/biru dengan menambahkan user xrdp ke grup ssl-cert
           sudo adduser xrdp ssl-cert
-          # Restart service xrdp untuk menerapkan konfigurasi
           sudo systemctl restart xrdp
 
       - name: 3. Buat Akun Pengguna untuk RDP
         run: |
-          # Membuat user baru bernama 'runneradmin' dan mengatur password dari secret
-          # Anda HARUS membuat secret bernama RDP_PASSWORD di repo Anda
-          sudo useradd -m -s /bin/bash runneradmin
-          echo "runneradmin:${{ secrets.RDP_PASSWORD }}" | sudo chpasswd
-          echo "Akun RDP dibuat dengan username: runneradmin"
+          sudo useradd -m -s /bin/bash rdp
+          echo "rdp:${{ secrets.RDP_PASSWORD }}" | sudo chpasswd
+          echo "Akun RDP dibuat dengan username: rdp"
 
-      - name: 4. Jalankan Tunnel Playit.gg
+      - name: 4. Jalankan Tunnel Playit.gg (URL DIPERBARUI)
         run: |
-          # Download dan jalankan agen playit di background
-          # Agen akan menggunakan secret key Anda dari secret 'PL'
-          wget -O playit https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-agent
+          # Mengunduh file agen playit dengan nama yang benar untuk arsitektur x86_64 Linux
+          # Lalu menyimpannya sebagai 'playit' agar perintah selanjutnya tetap berfungsi.
+          wget -O playit https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-agent-x86_64-linux
           chmod +x playit
           echo "Menjalankan Playit Tunnel... Cari alamat RDP Anda di log di bawah ini."
-          # Menjalankan playit dengan secret dari 'PL', outputnya akan muncul di log
           echo "${{ secrets.PL }}" | ./playit -s &
 
       - name: 5. Jaga Sesi Tetap Aktif (HUBUNGKAN SEKARANG!)
@@ -48,5 +42,4 @@ jobs:
           echo "Sesi RDP Siap! Silakan hubungkan menggunakan alamat dari log Playit."
           echo "Sesi ini akan tetap aktif selama sekitar 6 jam sebelum dimatikan."
           echo "===================================================================="
-          # Perintah ini akan menjaga agar job tidak selesai sebelum timeout
           sleep 21000
