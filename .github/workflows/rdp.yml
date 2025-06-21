@@ -26,11 +26,11 @@ jobs:
 
       - name: 3. Buat Akun Pengguna untuk RDP
         run: |
-          # Membuat user baru bernama 'rdp' dan mengatur password dari secret
+          # Membuat user baru bernama 'runneradmin' dan mengatur password dari secret
           # Anda HARUS membuat secret bernama RDP_PASSWORD di repo Anda
-          sudo useradd -m -s /bin/bash rdp
-          echo "rdp:${{ secrets.RDP_PASSWORD }}" | sudo chpasswd
-          echo "Akun RDP dibuat dengan username: rdp"
+          sudo useradd -m -s /bin/bash runneradmin
+          echo "runneradmin:${{ secrets.RDP_PASSWORD }}" | sudo chpasswd
+          echo "Akun RDP dibuat dengan username: runneradmin"
 
       - name: 4. Jalankan Tunnel Playit.gg
         run: |
