@@ -31,7 +31,7 @@ jobs:
         run: |
           # Mengunduh file agen playit dengan nama yang benar untuk arsitektur x86_64 Linux
           # Lalu menyimpannya sebagai 'playit' agar perintah selanjutnya tetap berfungsi.
-          wget -O playit https://github.com/playit-cloud/playit-agent/releases/latest/download/playit-agent-x86_64-linux
+          wget -O playit https://github.com/playit-cloud/playit-agent/releases/download/v0.15.26/playit-linux-amd64
           chmod +x playit
           echo "Menjalankan Playit Tunnel... Cari alamat RDP Anda di log di bawah ini."
           echo "${{ secrets.PL }}" | ./playit -s &
